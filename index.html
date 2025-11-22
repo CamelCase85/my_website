@@ -1,1 +1,300 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard Jadual Ibadah — Generate WhatsApp Text</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="wrap">
+        <!-- Header Section -->
+        <header>
+            <div>
+                <h1>Dashboard Jadual Pelayanan Ibadah — WhatsApp Export</h1>
+                <p class="lead">Pilih tarikh untuk dapatkan maklumat ibadah • Copy & share ke WhatsApp dengan pantas</p>
+            </div>
+            <div class="controls">
+                <div class="small">Tarikh hari ini: <span id="todayLabel"></span></div>
+            </div>
+        </header>
 
+        <!-- Main Card -->
+        <div class="card">
+            <div class="row" style="justify-content:space-between">
+                <div class="row">
+                    <button id="prevBtn">⟵ Sebelumnya</button>
+                    <button id="activationBtn" class="activation-btn">Gereja: [Belum Dipilih]</button>
+                    <button id="nextBtn">Seterusnya ⟶</button>
+                </div>
+
+                <div class="row">
+                    <input id="fileInput" type="file" accept=".csv,.json" />
+                    <button id="loadSample">Load Contoh Data</button>
+                    <button id="getCurrentWeek" class="get-data-btn">📅 Dapatkan Pelayanan Minggu Ini</button>
+                </div>
+            </div>
+
+            <div style="margin-top:12px">
+                <div class="row">
+                    <div class="small">Pilih Tarikh Ibadah:</div>
+                    <input type="date" id="datePicker" class="date-picker">
+                    <button id="resetDate" class="btn-ghost">Reset ke Hari Ini</button>
+                    <button id="saveAllBtn" class="save-all-btn">💾 Save All Data</button>
+                    <button id="nextWeekPreview" class="next-week-btn">📅 Pratinjau Minggu Depan</button>
+                </div>
+            </div>
+
+            <div style="margin-top:12px" class="cols">
+                <div>
+                    <div class="muted">Preview WhatsApp Text:</div>
+                    <div id="preview" class="preview" role="region" aria-live="polite"></div>
+                </div>
+                <div>
+                    <div style="display:flex;flex-direction:column;gap:8px">
+                        <button id="copyBtn">📋 Salin ke Clipboard</button>
+                        <button id="downloadBtn" class="btn-ghost">⬇️ Download .txt</button>
+                        <button id="editRaw" class="btn-ghost">✍️ Edit Teks</button>
+                        <div class="note">Format input: CSV (header: TARIKH, PEMIMPIN, TEKS_PEMBACAAN, PENGKHUTBAH, TEKS_KHUTBAH, SUBTEMA, MINGGU_PELAYANAN, TEMA_BULANAN, TEMA_UMUM, GSM1, GSM2, GSM3, KRT_TARIKH, KRT_PEMIMPIN, KRT_KELUARGA, KRT_RENUNGAN, IBADAH_KHAS_TARIKH, IBADAH_KHAS_PEMIMPIN, IBADAH_KHAS_PENGKHUTBAH, IBADAH_KHAS_TEKS)</div>
+                    </div>
+                    
+                    <!-- Struktur Pelayanan 6P -->
+                    <div class="pelayanan-6p">
+                        <h3>PELAYANAN 6P</h3>
+                        
+                        <div class="pelayanan-category">
+                            <h4>1. PERSEKUTUAN DOA</h4>
+                            <p>Definisi: Membangun hubungan yang intim dengan Tuhan melalui doa bersama dan persekutuan rohani.</p>
+                            <ul>
+                                <li>Belajar Berdoa</li>
+                                <li>Kelompok Sel</li>
+                                <li>KRT (Kelompok Rumah Tangga)</li>
+                                <li>Saat Teduh</li>
+                                <li>Doa Syafaat Jemaat</li>
+                                <li>Retreat Doa</li>
+                                <li>Doa & Puasa Bersama</li>
+                                <li>Pelatihan Penyusunan Doa</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Kategori lain tetap sama -->
+                        <div class="pelayanan-category">
+                            <h4>2. PEMBELAJARAN & PEMAHAMAN ALKITAB</h4>
+                            <p>Definisi: Memperdalam pengetahuan dan pemahaman jemaat terhadap firman Tuhan.</p>
+                            <ul>
+                                <li>Kempen Membaca Alkitab</li>
+                                <li>Katekismus</li>
+                                <li>Kuiz Alkitab</li>
+                                <li>Kursus Hermeneutika Alkitab</li>
+                                <li>Bengkel Apologetika</li>
+                                <li>Pembelajaran Sejarah Alkitab</li>
+                                <li>Program Tafsiran Alkitab Berkelompok</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="pelayanan-category">
+                            <h4>3. PENGINJILAN</h4>
+                            <p>Definisi: Menginjil dan menyampaikan Injil Kristus secara kreatif, terarah, dan relevan kepada semua kalangan.</p>
+                            <ul>
+                                <li>4 Hukum Rohani</li>
+                                <li>Warna Kehidupan (Colour of Life)</li>
+                                <li>Penginjilan Kreatif</li>
+                                <li>Bengkel Kesaksian Hidup</li>
+                                <li>Penginjilan Sosial</li>
+                                <li>Kempen Penginjilan Sekolah Minggu</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="pelayanan-category">
+                            <h4>4. PEMURIDAN</h4>
+                            <p>Definisi: Membentuk iman dan karakter jemaat agar semakin serupa dengan Kristus.</p>
+                            <ul>
+                                <li>Belajar Teori Muzik</li>
+                                <li>Belajar Alat Muzik</li>
+                                <li>Belajar Koir</li>
+                                <li>Belajar Liturgi & Penyembahan</li>
+                                <li>PKK (Pertumbuhan Kehidupan Kristen)</li>
+                                <li>Belajar Homiletik</li>
+                                <li>Kajian Buku Longoi</li>
+                                <li>Belajar Tarian Rebana</li>
+                                <li>Belajar Tarian Ibadah</li>
+                                <li>Belajar Tarian & Drama Muzikal</li>
+                                <li>Program Mentor-Mentee</li>
+                                <li>Belajar Pengurusan Acara Gereja</li>
+                                <li>Latihan Pembuatan Materi Pemuridan</li>
+                                <li>Pemuridan Digital</li>
+                                <li>Belajar Kerohanian Harian</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="pelayanan-category">
+                            <h4>5. PELATIHAN KEPIMPINAN</h4>
+                            <p>Definisi: Membangun dan memperlengkapi pemimpin gereja yang efektif dan berintegriti.</p>
+                            <ul>
+                                <li>Bengkel Kepimpinan</li>
+                                <li>Pengurusan Gereja</li>
+                                <li>Bengkel Kesetiausahaan</li>
+                                <li>Kunci Kira-kira/Pengurusan Kewangan</li>
+                                <li>Kursus Kepimpinan Pelayan</li>
+                                <li>Latihan Penyelesaian Konflik</li>
+                                <li>Bengkel Strategi Visi dan Misi Gereja</li>
+                                <li>Latihan Kepimpinan Generasi Muda</li>
+                                <li>Bengkel Komunikasi Efektif</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="pelayanan-category">
+                            <h4>6. PENATALAYANAN</h4>
+                            <p>Definisi: Mengelola dengan setia semua sumber daya yang Tuhan percayakan (masa, tenaga, harta, karunia).</p>
+                            <ul>
+                                <li>Bengkel Penatalayanan</li>
+                                <li>Penatalayanan Digital</li>
+                                <li>Bengkel Pengurusan Waktu & Prioritas</li>
+                                <li>Bengkel Etika dan Integriti Pelayanan</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="rawEditorContainer" style="display:none; margin-top: 15px;">
+                <div class="muted">Editor Teks:</div>
+                <textarea id="rawArea" class="full-editor"></textarea>
+                <div class="row" style="margin-top: 10px;">
+                    <button id="saveEdit" class="btn-ghost">Simpan Perubahan</button>
+                    <button id="cancelEdit" class="btn-ghost">Batal</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ruangan Pengumuman Mingguan -->
+        <div class="announcement-section">
+            <h3>Pengumuman Mingguan</h3>
+            <textarea id="announcementInput" class="announcement-textarea" placeholder="Masukkan pengumuman mingguan di sini..."></textarea>
+            <div class="row" style="margin-top: 10px;">
+                <button id="saveAnnouncement" class="btn-ghost">Simpan Pengumuman</button>
+                <button id="formatBullet" class="btn-ghost">• Tambah Bullet</button>
+                <button id="formatNumber" class="btn-ghost">1. Tambah Numbering</button>
+            </div>
+        </div>
+
+        <!-- Preview Pengumuman -->
+        <div class="announcement-preview">
+            <h3>Preview Pengumuman</h3>
+            <div id="announcementPreview" class="preview" style="min-height: 100px;">
+                Tiada pengumuman untuk tarikh ini.
+            </div>
+        </div>
+
+        <!-- Data Real dari CSV -->
+        <div class="sample-data" id="realDataTable">
+            <h3>Data Pelayanan Sebenar (Bulan: <span id="currentMonthYear"></span>)</h3>
+            <div class="scrollable-table">
+                <table class="sample-table" id="dynamicDataTable">
+                    <thead id="dynamicDataTableHead"></thead>
+                    <tbody id="dynamicDataTableBody"></tbody>
+                </table>
+            </div>
+            <div class="note" style="margin-top: 10px;">
+                <strong>Maklumat:</strong><br>
+                - Data ini diambil terus dari fail CSV yang telah diload<br>
+                - Hanya data untuk bulan semasa dipaparkan<br>
+                - Untuk melihat data bulan lain, pilih tarikh dalam bulan tersebut dan tekan "Dapatkan Pelayanan Minggu Ini"
+            </div>
+        </div>
+
+        <!-- Maklumat Gereja -->
+        <div class="church-info">
+            <h3>Maklumat Gereja</h3>
+            <div class="church-card">
+                <h4>Gembala Jemaat</h4>
+                <p>Pr. Sarlius Opirar</p>
+                <p>012-345 6789</p>
+            </div>
+            <div class="church-card">
+                <h4>Pengerusi</h4>
+                <p>Danny J Ojilim</p>
+                <p>012-345 6789</p>
+            </div>
+            <div class="church-card">
+                <h4>Timbalan Pengerusi</h4>
+                <p>Markos Suman</p>
+                <p>012-345 6789</p>
+            </div>
+            <div class="church-card">
+                <h4>Setiausaha</h4>
+                <p>Rainatate Majawal</p>
+                <p>012-345 6789</p>
+            </div>
+            <div class="church-card">
+                <h4>Penolong Setiausaha</h4>
+                <p>Frabie Majawal</p>
+                <p>012-345 6789</p>
+            </div>
+            <div class="church-card">
+                <h4>Bendahari</h4>
+                <p>Felay Mojingo</p>
+                <p>012-345 6789</p>
+            </div>
+        </div>
+
+        <div class="card small">
+            <strong>Cara guna ringkas</strong>
+            <ol>
+                <li>Tekan butang <em>"GEREJA: [Belum Dipilih]"</em> untuk memilih nama gereja anda terlebih dahulu.</li>
+                <li>Tekan <em>Load contoh data</em> untuk lihat output contoh anda.</li>
+                <li>Atau upload CSV/JSON anda dengan format yang betul (rujuk jadual contoh di atas).</li>
+                <li>Pilih tarikh ibadah untuk memaparkan maklumat minggu tersebut.</li>
+                <li>Gunakan butang "Sebelumnya" dan "Seterusnya" untuk navigasi harian.</li>
+                <li>Gunakan "Pratinjau Minggu Depan" untuk melihat jadual 7 hari ke depan.</li>
+                <li>Isi pengumuman mingguan di ruang yang disediakan.</li>
+                <li>Tekan <em>Copy</em> dan paste ke WhatsApp - format bold akan kekal dalam WhatsApp.</li>
+                <li>Gunakan <em>Save All Data</em> untuk simpan data ke penyemak imbas.</li>
+                <li>Gunakan <em>Dapatkan Pelayanan Minggu Ini</em> untuk dapatkan jadual pelayanan terdekat dan paparan data bulanan.</li>
+            </ol>
+        </div>
+
+        <footer>
+            Direka untuk kongsi cepat — gunakan CSV/JSON dengan format yang betul.
+            <div class="credit">Dibangunkan oleh Gembala Jemaat - Sistem Pengurusan Jadual Ibadah</div>
+        </footer>
+    </div>
+
+    <!-- Modal for next week preview -->
+    <div id="nextWeekModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Pratinjau Minggu Depan</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="nextWeekPreviewContent" class="full-preview"></div>
+            <div style="margin-top: 15px;">
+                <button id="copyNextWeekBtn" class="btn-ghost">📋 Salin ke Clipboard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for church name input -->
+    <div id="churchModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Pilih Nama Gereja</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div>
+                <label class="modal-label">Sila masukkan nama gereja anda:</label>
+                <input type="text" id="churchNameInput" class="modal-input" placeholder="Contoh: Gereja Methodist Damansara Utama">
+            </div>
+            <div class="modal-buttons">
+                <button id="cancelChurch" class="btn-ghost">Batal</button>
+                <button id="saveChurch" class="save-all-btn">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification element -->
+    <div id="notification" class="notification"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
